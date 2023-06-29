@@ -137,7 +137,7 @@ class Emulator:
         self.uc.mem_write(thread_info_1 + 0xC, int(thread_info_2).to_bytes(4, byteorder='little'))
         self.uc.reg_write(UC_ARM_REG_C13_C0_3, thread_info_1)
 
-    def load_library(self, filename, do_init=True):
+    def load_library(self, filename, do_init=True):#一般都设置do_init为false，通常在有smc自修改时才设置为true
         libmod = self.modules.load_module(filename, do_init)
         if do_init:
             logger.debug("Calling init for: %s " % filename)
