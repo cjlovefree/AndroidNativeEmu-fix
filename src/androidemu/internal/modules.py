@@ -44,7 +44,7 @@ class Modules:
                 return module
         return None
 
-    def load_module(self, filename):
+    def load_module(self, filename, do_init=True):
         logger.debug("Loading module '%s'." % filename)
 
         with open(filename, 'rb') as fstream:
@@ -203,8 +203,19 @@ class Modules:
             # Store information about loaded module.
             module = Module(filename, load_base, bound_high - bound_low, symbols_resolved, init_array)
             self.modules.append(module)
-
+            
+            
+            if do_init:
+                '''
+                for r in self.emu.mu.mem_regions():
+                    print("region begin :0x%08X end:0x%08X, prot:%d"%(r[0], r[1], r[2]))
+                #
+                '''
+                module.call_init(self.emu)
+        #
+            logger.info("finish load lib %s base 0x%08X"%(filename, load_base))
             return module
+            
 
     def _elf_get_symval(self, elf, elf_base, symbol):
         if symbol.name in self.symbol_hooks:
